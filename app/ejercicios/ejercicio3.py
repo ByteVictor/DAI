@@ -31,11 +31,11 @@ def criba_erastotenes(numero):
     else:
         return lista_numeros
 
+def ejercicio3(n):
+    print("Se cribaran todos los numeros naturales desde 2 hasta ", n, "<br><br>")
+    n = int(n)
 
-print("Se cribaran todos los numeros naturales desde 2 hasta: ")
-n = int(input())
+    resultado = criba_erastotenes(n)
+    print( resultado )
 
-resultado = criba_erastotenes(n)
-print( resultado )
-
-print( "Hay un total de ", len(resultado), " primos anteriores a ", n)
+    print( "<br><br>Hay un total de ", len(resultado), " primos anteriores a ", n)
