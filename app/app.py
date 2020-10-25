@@ -55,3 +55,7 @@ def reg_ex():
     ejercicio6()
     
     return salida.getvalue()
+
+@app.errorhandler(404)
+def page_notfound(error):
+    return render_template('notfound.html'), 404
