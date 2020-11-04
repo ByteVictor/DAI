@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+
+{% block variante %}
+<section class="bg-light mt-2 p-2 border borfer-primary">
+  <h1>{{request.path.split('/')[1]}}</h1>
+  <div>{{salida|safe}}</div>
+</section>
+
+{% endblock %}

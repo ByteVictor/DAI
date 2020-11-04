@@ -1,5 +1,6 @@
 #./app/app.py
-from flask import Flask, render_template
+from flask import Flask, render_template, session, request, redirect, url_for
+#from ejercicios.ejercicio1 import ejercicio1
 from ejercicios.ejercicio2 import ejercicio2
 from ejercicios.ejercicio3 import ejercicio3
 from ejercicios.ejercicio5 import ejercicio5
@@ -7,14 +8,39 @@ from ejercicios.ejercicio6 import ejercicio6
 
 from io import StringIO
 import sys
+from model import *
 
 app = Flask(__name__)
 
-
+app.secret_key = 'clavesuperhipermegasecreta'
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if( request.method == 'POST' ):
+        if( request.form['email'] == db['user']['email']
+        and request.form['password'] == db['user_pass']['pass'] ):
+            session['email'] = request.form['email']
+
+    if not 'email' in session:
+        return render_template('login.html', session=session, intentado=(request.method=='POST'))
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    #Eliminamos el email, por lo tanto estamos deslogeados
+    session.pop('email')
+
+    return redirect(url_for('index'))
+
+@app.route('/adivinacion')
+def adivinacion():
+    return render_template('vistaejercicio.html')
 
 @app.route('/ordena/<tamano>')
 def ordena(tamano):
@@ -23,7 +49,8 @@ def ordena(tamano):
     sys.stdout = salida
     ejercicio2(tamano)
     
-    return salida.getvalue()
+    
+    return render_template('vistaejercicio.html', salida=salida.getvalue())
 
 @app.route('/criba/<tamano>')
 def criba(tamano):
@@ -32,11 +59,11 @@ def criba(tamano):
     sys.stdout = salida
     ejercicio3(tamano)
     
-    return salida.getvalue()
+    return render_template('vistaejercicio.html', salida=salida.getvalue())
 
 @app.route('/fibonacci/<tamano>')
 def fibonacci(tamano):
-    return "Ver ficheros leeEJ4 y escribeJ4"
+    return render_template('vistaejercicio.html', salida="Ver ficheros leeEJ4 y escribeJ4") 
     
 @app.route('/cadenas/<cadena>')
 def cadenas(cadena):
@@ -45,7 +72,7 @@ def cadenas(cadena):
     sys.stdout = salida
     ejercicio5(cadena)
     
-    return salida.getvalue()
+    return render_template('vistaejercicio.html', salida=salida.getvalue())
 
 @app.route('/regex')
 def reg_ex():
@@ -54,7 +81,7 @@ def reg_ex():
     sys.stdout = salida
     ejercicio6()
     
-    return salida.getvalue()
+    return render_template('vistaejercicio.html', salida=salida.getvalue())
 
 @app.errorhandler(404)
 def page_notfound(error):
