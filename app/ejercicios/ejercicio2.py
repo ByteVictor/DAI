@@ -8,7 +8,7 @@ def medir_tiempo(funcion, matriz):
     
     tiempo = toc - tic
     
-    print(f'Ha tardado: {tiempo:0.20f} segundos <br>')
+    print(f'<b>Ha tardado: {tiempo:0.20f} segundos </b><br><br>')
     return tiempo
 
 def ordenacion_seleccion(matriz):
@@ -26,7 +26,7 @@ def ordenacion_seleccion(matriz):
         matriz[pos_minimo] = swap
 
     
-    print("Matriz ordenada por seleccion:\n", matriz, "<br>")
+    print("<b>Matriz ordenada por seleccion:</b><br>", matriz, "<br>")
 
 def ordenacion_insercion(matriz):
     for i in range(1, len(matriz)):
@@ -39,7 +39,7 @@ def ordenacion_insercion(matriz):
 
         matriz[j] = insert
 
-    print("Matriz ordenada por insercion:\n", matriz, "<br>")
+    print("<b>Matriz ordenada por insercion:</b><br>", matriz, "<br>")
 
 def ordenacion_burbuja(matriz):
     for i in range(0, len(matriz)):
@@ -49,19 +49,19 @@ def ordenacion_burbuja(matriz):
                 matriz[j] = matriz[j-1]
                 matriz[j-1] = swap
 
-    print("Matriz ordenada por burbuja:\n", matriz, "<br>")
+    print("<b>Matriz ordenada por burbuja:</b><br>", matriz, "<br>")
 
 
 def ejercicio2(tamano_matriz):
     matriz = []
     tamano_matriz = int(tamano_matriz)
 
-    print("El tamaño de la matriz se ha tomado de la url: ", tamano_matriz, "<br><br>")
+    print("El tamaño de la matriz es: <b>", tamano_matriz, "</b><br><br>")
 
     for i in range(0, tamano_matriz):
         matriz.append(random.randint(1, 100))
 
-    print("Matriz inicial:\n", matriz, "<br>")
+    print("<b>Matriz inicial:</b><br>", matriz, "<br>")
 
     tiempo_seleccion  = medir_tiempo(ordenacion_seleccion, matriz[:])
     tiempo_insercion  = medir_tiempo(ordenacion_insercion, matriz[:])
@@ -69,12 +69,13 @@ def ejercicio2(tamano_matriz):
 
     print("<br><br>")
 
+    print("<b>")
     if( tiempo_seleccion < tiempo_insercion and tiempo_seleccion < tiempo_burbuja):
         print(f'La ordenacion por seleccion ha sido la mas rapida: {tiempo_seleccion:0.20f}')
     elif(tiempo_insercion < tiempo_seleccion and tiempo_insercion < tiempo_burbuja):
         print(f'La ordenacion por insercion ha sido la mas rapida: {tiempo_insercion:0.20f}')
     else:
         print(f'La ordenacion por burbuja ha sido la mas rapida: {tiempo_burbuja:0.20f}')
-
+    print("</b>")
 
     #A partir de un numero lo suficientemente grande de datos, gana siempre la ordenacion por seleccion

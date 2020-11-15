@@ -3,7 +3,17 @@
     border-color: red;
 }*/
 
-html, body, main {
+/*html, body, main {
     height: 100%;
+}*/
+
+#columna-main{
+    padding-bottom: 8px;
+    margin-bottom: 56px;
 }
 
+footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

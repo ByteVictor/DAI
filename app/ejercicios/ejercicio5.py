@@ -15,18 +15,18 @@ def cadena_balanceada(cadena):
             
 def test(cond):
     if(cond):
-        return "✓" 
+        return "<div class='alert alert-success'>Correcto ✓</div>" 
     else:
-        return "✘"
+        return "<div class='alert alert-danger'>Incorrecto ✘</div>"
 
 def ejercicio5(cadena):
     cadena1 = "[][][][][]]["
     cadena2 = "[]][x[[]][][]"
     cadena3 = "[[]][[[x]]]"
 
-    print("Tests <br>")
-    print(test(cadena_balanceada(cadena1)), cadena1, "<br>")
-    print(test(cadena_balanceada(cadena2)), cadena2, "<br>")
-    print(test(cadena_balanceada(cadena3)), cadena3, "<br>")
+    print("<b>EJEMPLOS:</b> <br>")
+    print(cadena1, test(cadena_balanceada(cadena1)),  "<br>")
+    print(cadena2, test(cadena_balanceada(cadena2)),  "<br>")
+    print(cadena3, test(cadena_balanceada(cadena3)),  "<br>")
 
     print("<br><br>Cadena para testear: ", cadena, test(cadena_balanceada(cadena)) )
