@@ -85,7 +85,7 @@ def adivinacion():
                'resumen'       : 'Intenta adivinar el número correcto',
                'mensaje_error' : 'El valor introducido no es válido'}
 
-    if not 'numero_aleatorio' in session or session['numero_intentos'] <= 1:
+    if not 'numero_aleatorio' in session or not 'numero_intentos' in session: 
         session['numero_aleatorio'] = random.randint(1, 100)
         session['numero_intentos'] = 10
         print('Reasignando numero', file=sys.stderr)
@@ -97,10 +97,21 @@ def adivinacion():
             enviado = 'correcto'
 
             res = ejercicio1(intento, session['numero_aleatorio'])
-            session['numero_intentos'] -= 1
+
+            if( session['numero_intentos'] <= 1 ):
+                session['numero_aleatorio'] = random.randint(1, 100)
+                session['numero_intentos'] = 10
+                print('Ultimo intento fallido, reasignando', file=sys.stderr)
+            else:
+                session['numero_intentos'] -= 1
+
             cuerpo['resumen'] += ', te quedan <b>' + str(session['numero_intentos']) + ' intentos </b> '
 
+
+            print(session['numero_aleatorio'], file=sys.stderr)
+
             if( res ):
+                cuerpo['resumen'] = 'Felicidades! lo adivinaste, puedes volver a jugar'
                 session.pop('numero_aleatorio')
                 print('Reiniciando numero_aleatorio', file=sys.stderr)
 
