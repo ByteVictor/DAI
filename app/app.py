@@ -23,20 +23,6 @@ client = MongoClient("mongo", 27017)
 db = client.SampleCollections
 ##
 
-@app.route('/mongo')
-def mongo():
-	pelis = db.Sakila_films.find() # devuelve un cursor(*), no una lista ni un iterador
-
-	lista_pelis = []
-
-	for peli in pelis:
-		app.logger.debug(pelis) # salida consola
-		lista_pelis.append(peli)
-
-	return render_template('lista.html', lista_pelis=lista_pelis)
-
-
-
 def anadir_ultimolinkvisitado(link, texto):
 		if not 'ultimos_links' in session:
 				session['ultimos_links'] = []
@@ -95,6 +81,20 @@ def registro():
 						return redirect(url_for('index'))
 		else:
 				return redirect(url_for('index'))
+
+@app.route('/mongo')
+def mongo():
+    anadir_ultimolinkvisitado('/', 'Lista (mongo)')
+    pelis = db.Sakila_films.find()
+
+    lista_pelis = []
+
+    for peli in pelis:
+        app.logger.debug(pelis) # salida consola
+        lista_pelis.append(peli)
+
+    return render_template('lista.html', lista_pelis=lista_pelis)
+
 
 @app.route('/adivinacion', methods=['GET','POST'])
 def adivinacion():

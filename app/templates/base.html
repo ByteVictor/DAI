@@ -25,6 +25,9 @@
                     <a class="nav-link {% if request.path.split('/')[1] == "" %}active{% endif %}" href="/">Home</a>
                   </li>
                   <li class="nav-item ">
+                    <a class="nav-link {% if request.path.split('/')[1] == "mongo" %}active{% endif %}" href="/mongo">Mongo</a>
+                  </li>
+                  <li class="nav-item ">
                     <a class="nav-link {% if request.path.split('/')[1] == "adivinacion" %}active{% endif %}" href="/adivinacion">Ejercicio 1</a>
                   </li>
                   <li class="nav-item dropdown">
