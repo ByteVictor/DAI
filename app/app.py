@@ -25,14 +25,14 @@ db = client.SampleCollections
 
 @app.route('/mongo')
 def mongo():
-	episodios = db.samples_friends.find() # devuelve un cursor(*), no una lista ni un iterador
+	pelis = db.samples_friends.find() # devuelve un cursor(*), no una lista ni un iterador
 
-	lista_episodios = []
-	for episodio in episodios:
-		app.logger.debug(episodio) # salida consola
-		lista_episodios.append(episodio)
+	lista_pelis = []
+	for peli in pelis:
+		app.logger.debug(pelis) # salida consola
+		lista_pelis.append(peli)
 
-	return render_template('lista.html', episodios=lista_episodios)
+	return render_template('lista.html', episodios=lista_pelis)
 
 
 

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+
+{% block variante %}
+<section class="bg-light p-2 border">
+  <table class="table">
+    <thead>
+      <tr>
+      <th scope="col">#</th>
+      <th scope="col">Película</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for i in range(0, (lista_pelis)| lenght) %}
+      <tr>
+        <th scope="row">{{i+1}}</th>
+        <td>{{lista_pelis[i]}}</td>
+      </tr>
+    {% endif %}
+    </tbody>
+</section>
+
+
+{% endblock %}
