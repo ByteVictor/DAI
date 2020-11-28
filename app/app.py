@@ -12,9 +12,29 @@ import sys
 import random
 from model import *
 
+from pymongo import MongoClient
+
 app = Flask(__name__)
 
 app.secret_key = 'clavesuperhipermegasecreta'
+
+#Mongo:
+client = MongoClient("mongo", 27017)
+db = client.SampleCollections
+##
+
+@app.route('/mongo')
+def mongo():
+	episodios = db.samples_friends.find() # devuelve un cursor(*), no una lista ni un iterador
+
+	lista_episodios = []
+	for episodio in episodios:
+		app.logger.debug(episodio) # salida consola
+		lista_episodios.append(episodio)
+
+	return render_template('lista.html', episodios=lista_episodios)
+
+
 
 def anadir_ultimolinkvisitado(link, texto):
     if not 'ultimos_links' in session:
