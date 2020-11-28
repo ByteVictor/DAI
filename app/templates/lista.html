@@ -3,6 +3,14 @@
 
 {% block variante %}
 <section class="bg-light p-2 border">
+  <form action="/lista" method="POST">
+    <div class="form-row align-items-center">
+      <label>Búsqueda</label>
+      <input type="text" class="form-control" name="busca" placeholder="Introduce la búsqueda">
+      <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+    
+  </form>
   <table class="table">
     <thead>
       <tr>
