@@ -8,13 +8,15 @@
       <tr>
       <th scope="col">#</th>
       <th scope="col">Película</th>
+      <th scope="col">Categoría</th>
       </tr>
     </thead>
     <tbody>
-    {% for i in range(0, (lista_pelis)| lenght) %}
+    {% for peli in lista_pelis %}
       <tr>
-        <th scope="row">{{i+1}}</th>
-        <td>{{lista_pelis[i]}}</td>
+        <th scope="row">{{loop.index}}</th>
+        <td>{{peli['Title']}}</td>
+        <td>{{peli['Category']}}</td>
       </tr>
     {% endfor %}
     </tbody>
