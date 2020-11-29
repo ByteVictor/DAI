@@ -87,17 +87,20 @@ def mongo():
     anadir_ultimolinkvisitado('/', 'Lista (mongo)')
     pelis = db.Sakila_films.find()
 
+    regex = ".*"
+
     if( request.method == 'POST' ):
-	    lista_pelis = []
+        lista_pelis = []
 
-	    for peli in pelis:
-	        app.logger.debug(pelis) # salida consola
-	        lista_pelis.append(peli)
-	    
-		return render_template('lista.html', lista_pelis=lista_pelis)
-	else:
-		return render_template('lista.html')
+        pelis = pelis.find({"Title": { '$regex': regex+request.form['busca']+regex, '$options':'i'}})
 
+        for peli in pelis:
+            app.logger.debug(pelis) # salida consola
+            lista_pelis.append(peli)
+
+        return render_template('lista.html', lista_pelis=lista_pelis)
+    else:
+        return render_template('lista.html')
 
 @app.route('/adivinacion', methods=['GET','POST'])
 def adivinacion():
