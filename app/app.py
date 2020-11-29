@@ -82,18 +82,21 @@ def registro():
 		else:
 				return redirect(url_for('index'))
 
-@app.route('/mongo')
+@app.route('/mongo', methods=['GET','POST'])
 def mongo():
     anadir_ultimolinkvisitado('/', 'Lista (mongo)')
     pelis = db.Sakila_films.find()
 
-    lista_pelis = []
+    if( request.method == 'POST' ):
+	    lista_pelis = []
 
-    for peli in pelis:
-        app.logger.debug(pelis) # salida consola
-        lista_pelis.append(peli)
-
-    return render_template('lista.html', lista_pelis=lista_pelis)
+	    for peli in pelis:
+	        app.logger.debug(pelis) # salida consola
+	        lista_pelis.append(peli)
+	    
+		return render_template('lista.html', lista_pelis=lista_pelis)
+	else:
+		return render_template('lista.html')
 
 
 @app.route('/adivinacion', methods=['GET','POST'])
