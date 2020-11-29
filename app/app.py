@@ -85,7 +85,7 @@ def registro():
 @app.route('/mongo', methods=['GET','POST'])
 def mongo():
     anadir_ultimolinkvisitado('/', 'Lista (mongo)')
-    pelis = db.Sakila_films.find()
+    pelis = db.Sakila_films
 
     regex = ".*"
 

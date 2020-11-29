@@ -3,7 +3,7 @@
 
 {% block variante %}
 <section class="bg-light p-2 border d-flex flex-column justify-content-center">
-  <form class="form-row align-items-center align-self-center" action="/lista" method="POST">
+  <form class="form-row align-items-center align-self-center" action="/mongo" method="POST">
     <div class="col-8 w-100 my-1">
       <input type="text" class="form-control col-auto" name="busca" placeholder="Introduce la búsqueda">
     </div>
@@ -30,6 +30,7 @@
       {% endfor %}
     {% endif %}
     </tbody>
+  </table>
 </section>
 
 
