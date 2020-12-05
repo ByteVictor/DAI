@@ -1,5 +1,5 @@
 #./app/app.py
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import Flask, render_template, session, request, redirect, url_for, jsonify
 from ejercicios.ejercicio1 import ejercicio1
 from ejercicios.ejercicio2 import ejercicio2
 from ejercicios.ejercicio3 import ejercicio3
@@ -276,3 +276,38 @@ def reg_ex():
 @app.errorhandler(404)
 def page_notfound(error):
 		return render_template('notfound.html'), 404
+
+### API REST ###
+
+# para devolver una lista (GET), o añadir (POST)
+@app.route('/api/movies', methods=['GET', 'POST'])
+def api_1():
+  if request.method == 'GET':
+    lista = []
+    movies = db.video_movies.find().sort('year')
+    for movie in movies:
+      lista.append({
+					        'id':    str(movie.get('_id')), # pasa a string el ObjectId
+					        'title': movie.get('title'), 
+					        'year':  movie.get('year'),
+					        'imdb':  movie.get('imdb')
+      })
+    return jsonify(lista)
+
+  if request.method == 'POST':
+
+
+# para devolver una, modificar o borrar
+@app.route('/api/movies/<id>', methods=['GET', 'PUT', 'DELETE'])
+def api_2(id):
+  if request.method == 'GET':
+  	try:
+      movie = db.video_movies.find_one({'_id':ObjectId(id)})
+      return jsonify({
+			              'id':    id,
+			              'title': movie.get('title'), 
+			              'year':  movie.get('year'),
+			              'imdb':  movie.get('imdb')
+      })
+    except:
+      return jsonify({'error':'Not found'}), 404
