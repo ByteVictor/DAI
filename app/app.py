@@ -12,7 +12,8 @@ import sys
 import random
 from model import *
 
-from pymongo import MongoClient
+from pymongo import MongoClient 
+from bson import ObjectId
 
 app = Flask(__name__)
 
@@ -81,26 +82,6 @@ def registro():
 						return redirect(url_for('index'))
 		else:
 				return redirect(url_for('index'))
-
-@app.route('/mongo', methods=['GET','POST'])
-def mongo():
-    anadir_ultimolinkvisitado('/', 'Lista (mongo)')
-    pelis = db.Sakila_films
-
-    regex = ".*"
-
-    if( request.method == 'POST' ):
-        lista_pelis = []
-
-        pelis = pelis.find({"Title": { '$regex': regex+request.form['busca']+regex, '$options':'i'}})
-
-        for peli in pelis:
-            app.logger.debug(pelis) # salida consola
-            lista_pelis.append(peli)
-
-        return render_template('lista.html', lista_pelis=lista_pelis)
-    else:
-        return render_template('lista.html')
 
 @app.route('/adivinacion', methods=['GET','POST'])
 def adivinacion():
@@ -277,39 +258,168 @@ def reg_ex():
 def page_notfound(error):
 		return render_template('notfound.html'), 404
 
+@app.route('/mongo', methods=['GET','POST'])
+def mongo():
+    anadir_ultimolinkvisitado('/', 'Lista (mongo)')
+    pelis = db.Sakila_films
+
+    regex = ".*"
+
+    if( request.method == 'POST' ):
+        lista_pelis = []
+
+        pelis = pelis.find({"Title": { '$regex': regex+request.form['busca']+regex, '$options':'i'}})
+
+        for peli in pelis:
+            app.logger.debug(pelis) # salida consola
+            lista_pelis.append(peli)
+
+        return render_template('lista.html', lista_pelis=lista_pelis)
+    else:
+        return render_template('lista.html')
+
+@app.route('/debug', methods=['GET'])
+def debug():
+	pelis = db.Sakila_films
+	regex = ".*"
+	peli = pelis.find({"Title": { '$regex': regex, '$options':'i'}})
+	lista_pelis = []
+	for pel in peli:
+            app.logger.debug(pel) # salida consola
+            lista_pelis.append(pel)
+	return render_template('debug.html', debug=lista_pelis) 
+
 ############    API REST    ############
+
+def buscar_peli(id):
+	encontrado = False
+	if id is not None:
+		peli = db.Sakila_films.find_one({'_id':str(id)})
+		encontrado = True
+		#Por si el id es un entero (asi es por defecto en los datos de ejemplo)
+		if peli is None:
+			try : 
+			   id_int = int(id)
+			   peli = db.Sakila_films.find_one({'_id':id_int})
+			except:
+				encontrado = False
+	if encontrado:
+		return peli
+	else:
+		return None
+
+def buscar_peli_update(id, titulo, categoria):
+	encontrado = False
+	if id is not None:
+		peli = db.Sakila_films.find_one_and_update({'_id':str(id)},{'$set':{'Title':titulo,'Category':categoria}})
+		encontrado = True
+		#Por si el id es un entero (asi es por defecto en los datos de ejemplo)
+		if peli is None:
+			try : 
+			   id_int = int(id)
+			   peli = db.Sakila_films.find_one_and_update({'_id':id_int},{'$set':{'Title':titulo,'Category':categoria}})
+			except:
+				encontrado = False
+	if encontrado:
+		return peli
+	else:
+		return None
+
+def borrar_peli(id):
+	borrado = False
+	if id is not None:
+		res = db.Sakila_films.delete_one({'_id':str(id)})
+		borrado = True
+		#Por si el id es un entero (asi es por defecto en los datos de ejemplo)
+		if res.deleted_count == 0:
+			try : 
+			   id_int = int(id)
+			   res = db.Sakila_films.delete_one({'_id':id_int})
+			except:
+				borrado = False
+	if borrado:
+		return res
+	else:
+		return None
 
 @app.route('/api/pelis', methods=['GET', 'POST'])
 def api_1():
-  if request.method == 'GET':
-    lista = []
-    pelis = db.Sakila_films.find().sort('Title')
-    for peli in pelis:
-      lista.append({
-					'id':    str(pelis.get('_id')), # pasa a string el ObjectId
-					'title': pelis.get('title'), 
-					'year':  pelis.get('year'),
-					'imdb':  pelis.get('imdb')
-      })
-    return jsonify(lista)
+	if request.method == 'GET':
+		if request.args.get('id') is None:
+			lista = []
+			pelis = db.Sakila_films.find().sort('_id')
+			for peli in pelis:
+			  lista.append({
+							'_id':   str(peli.get('_id')), # pasa a string el ObjectId
+							'Title': peli.get('Title'), 
+							'Category':  peli.get('Category')
+			  })
+			return jsonify(lista)
+		else:
+			peli = buscar_peli(request.args.get('id'))
+			
+			if peli is None:
+				return jsonify({'error':'Not found'}), 404
+			else:
+				return jsonify({
+					'_id':    request.args.get('id'),
+					'Title': peli.get('Title'), 
+					'Category':  peli.get('Category')
+				})
 
-  if request.method == 'POST':
-	  db.Sakila_films.insert({
-			'Title': request.form['titulo']
-  })
+	if request.method == 'POST':
+		peli_nueva = {
+		'_id'  : str(ObjectId()),
+		'Title': request.form['titulo'],
+		'Category' : request.form['categoria']
+	}
+
+	db.Sakila_films.insert(peli_nueva)
+
+	return jsonify(peli_nueva)
 
 
 @app.route('/api/pelis/<id>', methods=['GET', 'PUT', 'DELETE'])
 def api_2(id):
 	if request.method == 'GET':
-		try:
-			pelis = db.Sakila_films.find_one({'_id':ObjectId(id)})
-			return jsonify({
-			'id':    id,
-			'title': pelis.get('title'), 
-			'year':  pelis.get('year'),
-			'imdb':  pelis.get('imdb')
-			})
-		except:
+
+		peli = buscar_peli(id)
+
+		if peli is None:
 			return jsonify({'error':'Not found'}), 404
-	#elif request.method == 'PUT':
+		else:
+			return jsonify({
+			'_id':    id,
+			'Title': peli.get('Title'), 
+			'Category':  peli.get('Category')
+			})
+	elif request.method == 'PUT':
+		if 'titulo' in request.form and 'categoria' in request.form:
+			peli = buscar_peli_update(id, request.form['titulo'], request.form['categoria'])
+		elif 'titulo' in request.form:
+			peli = buscar_peli_update(id, request.form['titulo'], '')
+		elif 'categoria' in request.form:
+			peli = buscar_peli_update(id, '', request.form['categoria'])
+		else:
+			return jsonify({'error':'Not found'}), 404
+
+		peli = buscar_peli(id)
+
+		if peli is None:
+			return jsonify({'error':'Not found'}), 404
+		else:
+			return jsonify({
+				'_id':   peli.get('_id'),
+				'Title': peli.get('Title'), 
+				'Category':  peli.get('Category')
+				})
+	elif request.method == 'DELETE':
+		res = borrar_peli(id)
+
+		if res is None or res.deleted_count == 0:
+			return jsonify({'error':'Not found'}), 404
+		else:
+			return jsonify({
+			'_id':    id
+			})
+		
