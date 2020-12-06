@@ -277,37 +277,39 @@ def reg_ex():
 def page_notfound(error):
 		return render_template('notfound.html'), 404
 
-### API REST ###
+############    API REST    ############
 
-# para devolver una lista (GET), o añadir (POST)
-@app.route('/api/movies', methods=['GET', 'POST'])
+@app.route('/api/pelis', methods=['GET', 'POST'])
 def api_1():
   if request.method == 'GET':
     lista = []
-    movies = db.video_movies.find().sort('year')
-    for movie in movies:
+    pelis = db.Sakila_films.find().sort('Title')
+    for peli in pelis:
       lista.append({
-					        'id':    str(movie.get('_id')), # pasa a string el ObjectId
-					        'title': movie.get('title'), 
-					        'year':  movie.get('year'),
-					        'imdb':  movie.get('imdb')
+					'id':    str(pelis.get('_id')), # pasa a string el ObjectId
+					'title': pelis.get('title'), 
+					'year':  pelis.get('year'),
+					'imdb':  pelis.get('imdb')
       })
     return jsonify(lista)
 
   if request.method == 'POST':
+	  db.Sakila_films.insert({
+			'Title': request.form['titulo']
+  })
 
 
-# para devolver una, modificar o borrar
-@app.route('/api/movies/<id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/api/pelis/<id>', methods=['GET', 'PUT', 'DELETE'])
 def api_2(id):
-  if request.method == 'GET':
-  	try:
-      movie = db.video_movies.find_one({'_id':ObjectId(id)})
-      return jsonify({
-			              'id':    id,
-			              'title': movie.get('title'), 
-			              'year':  movie.get('year'),
-			              'imdb':  movie.get('imdb')
-      })
-    except:
-      return jsonify({'error':'Not found'}), 404
+	if request.method == 'GET':
+		try:
+			pelis = db.Sakila_films.find_one({'_id':ObjectId(id)})
+			return jsonify({
+			'id':    id,
+			'title': pelis.get('title'), 
+			'year':  pelis.get('year'),
+			'imdb':  pelis.get('imdb')
+			})
+		except:
+			return jsonify({'error':'Not found'}), 404
+	#elif request.method == 'PUT':
