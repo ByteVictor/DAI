@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    
+<div class="d-flex justify-content-center mb-2">
+    <a href="/anadir_autor"><button class="btn btn-success">Nuevo</button></a>
+</div>
+
+<table class="table">
+    <tr>
+        <th scope="col">Nº</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Acción</th>
+    </tr>
+    {% for autor in autores %}
+    <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{autor.nombre}}</td>
+        <td class="row">
+            <form action="/modificar_autor" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="autor_id" value="{{ autor.id }}">
+                <button class="btn btn-warning btn-sm mr-2">Modificar</button>
+            </form>
+            <form action="/borrar_autor" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="autor_id" value="{{ autor.id }}">
+                <button class="btn btn-danger btn-sm">Borrar</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+    
+{% endblock %}

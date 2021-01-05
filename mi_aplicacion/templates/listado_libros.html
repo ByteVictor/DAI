@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    
+<div class="d-flex justify-content-center mb-2">
+    <a href="/anadir_libro"><button class="btn btn-success">Nuevo</button></a>
+</div>
+    
+<table class="table">
+    <tr>
+        <th scope="col">Nº</th>
+        <th scope="col">Titulo</th>
+        <th scope="col">Autor</th>
+        <th scope="col">Portada</th>
+        <th scope="col">Acción</th>
+    </tr>
+    {% for libro in libros %}
+    <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{libro.titulo}}</td>
+        <td>
+        {% for autor in libro.autores.all%}
+            {{autor.nombre}}<br>
+        {% endfor %}
+        </td>
+        <td><img class="img_tabla" src="{{ libro.portada.url }}"></td>
+        <td>
+            <form action="/modificar_libro" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="libro_id" value="{{ libro.id }}">
+                <button class="btn btn-warning btn-sm">Modificar</button>
+            </form>
+            
+            <form action="/borrar_libro" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="libro_id" value="{{ libro.id }}">
+                <button class="btn btn-danger btn-sm">Borrar</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+    
+{% endblock %}

@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('titulo', models.CharField(max_length=200)),
                 ('portada', models.ImageField(upload_to='Libro')),
-                ('autor', models.ManyToManyField(to='mi_aplicacion.Autor')),
+                ('autores', models.ManyToManyField(to='mi_aplicacion.Autor')),
             ],
         ),
         migrations.CreateModel(

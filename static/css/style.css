@@ -1,0 +1,10 @@
+
+.img_tabla{
+    width: 150px;
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
