@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    
+<div class="d-flex justify-content-center mb-2">
+    <a href="/anadir_prestamo"><button class="btn btn-success">Nuevo</button></a>
+</div>
+    
+<table class="table">
+    <tr>
+        <th scope="col">Nº</th>
+        <th scope="col">Libro</th>
+        <th scope="col">Portada Libro</th>
+        <th scope="col">Fecha</th>
+        <th scope="col">Usuario</th>
+        <th scope="col">Acción</th>
+    </tr>
+    {% for prestamo in prestamos %}
+    <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{prestamo.libro}}</td>
+        <td><img class="img_tabla" src="{{ prestamo.libro.portada.url }}"></td>
+        <td>{{prestamo.fecha}}</td>
+        <td>{{prestamo.usuario}}</td>
+        <td>
+            <form action="/modificar_prestamo/{{prestamo.id}}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="prestamo_id" value="{{ prestamo.id }}">
+                <button class="btn btn-warning btn-sm">Modificar</button>
+            </form>
+            
+            <form action="/borrar_prestamo" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="prestamo_id" value="{{ prestamo.id }}">
+                <button class="btn btn-danger btn-sm">Borrar</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+    
+{% endblock %}
