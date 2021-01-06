@@ -25,7 +25,7 @@
         </td>
         <td><img class="img_tabla" src="{{ libro.portada.url }}"></td>
         <td>
-            <form action="/modificar_libro" method="POST">
+            <form action="/modificar_libro/{{libro.id}}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="libro_id" value="{{ libro.id }}">
                 <button class="btn btn-warning btn-sm">Modificar</button>

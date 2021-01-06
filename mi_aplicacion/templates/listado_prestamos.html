@@ -23,7 +23,7 @@
         <td>{{prestamo.fecha}}</td>
         <td>{{prestamo.usuario}}</td>
         <td>
-            <form action="/modificar_prestamo" method="POST">
+            <form action="/modificar_prestamo/{{prestamo.id}}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="prestamo_id" value="{{ prestamo.id }}">
                 <button class="btn btn-warning btn-sm">Modificar</button>
