@@ -79,68 +79,75 @@ def lista_libros(request):
     return render(request,'listado_libros.html', context)
 
 def anadir_libro(request):
-    form = LibroForm(request.POST, request.FILES)
+    #Solo se puede si es staff
+    if request.user.is_staff:
+        form = LibroForm(request.POST, request.FILES)
 
-    if request.method == 'POST':
+        if request.method == 'POST':
 
-        if form.is_valid():
+            if form.is_valid():
 
-            nuevo_libro = form.save(commit=False)
-            autor = form.cleaned_data['autores']
-            nuevo_libro.save()
+                nuevo_libro = form.save(commit=False)
+                autor = form.cleaned_data['autores']
+                nuevo_libro.save()
 
-            nuevo_libro.autores.set(autor)
+                nuevo_libro.autores.set(autor)
 
 
-            return redirect('/lista_libros')
+                return redirect('/lista_libros')
+            else:
+                return HttpResponse('formulario invalido')
         else:
-            return HttpResponse('formulario invalido')
+            return render(request, 'formulario_crispy.html', {'form': LibroForm})
     else:
-        return render(request, 'formulario_crispy.html', {'form': LibroForm})
+        return redirect('/lista_libros')
 
 def borrar_libro(request):
-    form = request.POST.dict()
+    #Solo se puede si es staff
+    if request.user.is_staff:
+        form = request.POST.dict()
 
-    if request.method == 'POST':
-        if form.get('libro_id') != '':
-            libro = Libro.objects.get(id=form.get('libro_id'))
-            libro.delete()
+        if request.method == 'POST':
+            if form.get('libro_id') != '':
+                libro = Libro.objects.get(id=form.get('libro_id'))
+                libro.delete()
 
     return redirect('/lista_libros')
 
 def modificar_libro(request, id_libro):
-       
-    if request.method == 'POST':
-        form = request.POST.dict()
-        #Si venimos de la lista
-        if form.get('libro_id'):
-            try:
-                libro_modif = Libro.objects.get(id=form.get('libro_id'))
+    #Solo se puede si es staff
+    if request.user.is_staff:
+        if request.method == 'POST':
+            form = request.POST.dict()
+            #Si venimos de la lista
+            if form.get('libro_id'):
+                try:
+                    libro_modif = Libro.objects.get(id=form.get('libro_id'))
 
-                formulario_modificar = LibroForm(instance=libro_modif)
+                    formulario_modificar = LibroForm(instance=libro_modif)
 
-                return render(request, 'formulario_crispy.html', {'form': formulario_modificar})
-            except:
-                return HttpResponseBadRequest()
-        #si venimos del formulario de modificacion
-        else:
-            try:
-                libro_modif = Libro.objects.get(id=id_libro)
-            except:
-                return HttpResponseBadRequest()
-
-            form = LibroForm(request.POST, request.FILES, instance=libro_modif)
-            if form.is_valid():
-                libro_modif.titulo = form.cleaned_data.get('titulo')
-                libro_modif.portada = form.cleaned_data.get('portada')
-                autor = form.cleaned_data['autores']
-
-                libro_modif.save()
-
-                libro_modif.autores.set(autor)
+                    return render(request, 'formulario_crispy.html', {'form': formulario_modificar})
+                except:
+                    return HttpResponseBadRequest()
+            #si venimos del formulario de modificacion
             else:
-                return HttpResponse('formulario invalido')
-            
+                try:
+                    libro_modif = Libro.objects.get(id=id_libro)
+                except:
+                    return HttpResponseBadRequest()
+
+                form = LibroForm(request.POST, request.FILES, instance=libro_modif)
+                if form.is_valid():
+                    libro_modif.titulo = form.cleaned_data.get('titulo')
+                    libro_modif.portada = form.cleaned_data.get('portada')
+                    autor = form.cleaned_data['autores']
+
+                    libro_modif.save()
+
+                    libro_modif.autores.set(autor)
+                else:
+                    return HttpResponse('formulario invalido')
+                
     return redirect('/lista_libros')
 
 def lista_prestamos(request):
@@ -148,59 +155,66 @@ def lista_prestamos(request):
     return render(request,'listado_prestamos.html', context)
 
 def anadir_prestamo(request):
-    form = PrestamoForm(request.POST, request.FILES)
+    #Solo se puede si esta logeado
+    if request.user.is_authenticated:
+        form = PrestamoForm(request.POST, request.FILES)
 
-    if request.method == 'POST':
+        if request.method == 'POST':
 
-        if form.is_valid():
-            nuevo_prestamo = form.save(commit=False)
-            libro = form.cleaned_data['libro']
-            nuevo_prestamo.libro = libro
-            nuevo_prestamo.save()
+            if form.is_valid():
+                nuevo_prestamo = form.save(commit=False)
+                libro = form.cleaned_data['libro']
+                nuevo_prestamo.libro = libro
+                nuevo_prestamo.save()
 
-            return redirect('/lista_prestamos')
+                return redirect('/lista_prestamos')
+            else:
+                return HttpResponse('formulario invalido')
         else:
-            return HttpResponse('formulario invalido')
+            return render(request, 'formulario_crispy.html', {'form': PrestamoForm})
     else:
-        return render(request, 'formulario_crispy.html', {'form': PrestamoForm})
+        return redirect('/lista_prestamos')
 
 def borrar_prestamo(request):
-    form = request.POST.dict()
+    #Solo se puede si esta logeado
+    if request.user.is_authenticated:
+        form = request.POST.dict()
 
-    if request.method == 'POST':
-        if form.get('prestamo_id') != '':
-            prest = Prestamo.objects.get(id=form.get('prestamo_id'))
-            prest.delete()
+        if request.method == 'POST':
+            if form.get('prestamo_id') != '':
+                prest = Prestamo.objects.get(id=form.get('prestamo_id'))
+                prest.delete()
 
     return redirect('/lista_prestamos')
 
 def modificar_prestamo(request, id_prestamo):
-       
-    if request.method == 'POST':
-        form = request.POST.dict()
-        #Si venimos de la lista
-        if form.get('prestamo_id'):
-            try:
-                prest_modif = Prestamo.objects.get(id=form.get('prestamo_id'))
-
-                formulario_modificar = PrestamoForm(instance=prest_modif)
-
-                return render(request, 'formulario_crispy.html', {'form': formulario_modificar})
-            except:
-                return HttpResponseBadRequest()
-        #si venimos del formulario de modificacion
-        else:
-            form = PrestamoForm(request.POST)
-            if form.is_valid():
+    #Solo se puede si esta logeado
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = request.POST.dict()
+            #Si venimos de la lista
+            if form.get('prestamo_id'):
                 try:
-                    prest_modif = Prestamo.objects.get(id=id_prestamo)
-                    prest_modif.libro = form.cleaned_data.get('libro')
-                    prest_modif.fecha = form.cleaned_data.get('fecha')
-                    prest_modif.usuario = form.cleaned_data.get('usuario')
+                    prest_modif = Prestamo.objects.get(id=form.get('prestamo_id'))
 
-                    prest_modif.save()
+                    formulario_modificar = PrestamoForm(instance=prest_modif)
 
+                    return render(request, 'formulario_crispy.html', {'form': formulario_modificar})
                 except:
                     return HttpResponseBadRequest()
+            #si venimos del formulario de modificacion
+            else:
+                form = PrestamoForm(request.POST)
+                if form.is_valid():
+                    try:
+                        prest_modif = Prestamo.objects.get(id=id_prestamo)
+                        prest_modif.libro = form.cleaned_data.get('libro')
+                        prest_modif.fecha = form.cleaned_data.get('fecha')
+                        prest_modif.usuario = form.cleaned_data.get('usuario')
+
+                        prest_modif.save()
+
+                    except:
+                        return HttpResponseBadRequest()
             
     return redirect('/lista_prestamos')

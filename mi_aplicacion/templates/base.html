@@ -35,7 +35,18 @@
                     <a class="nav-link" href="/lista_prestamos">Préstamos</a>
                   </li>
                 </ul>
-                
+                {% if user.is_authenticated %}
+                <form class="form-inline m-1 my-lg-0" action="/accounts/logout">
+                  <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+                </form>
+                {% else %}
+                <form class="form-inline m-1 my-lg-0" action="/accounts/login">
+                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
+                </form>
+                <form class="form-inline m-1 my-lg-0" action="/accounts/signup">
+                  <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Registrarse</button>
+                </form>
+                {% endif %}
               </div>
             </nav>
         </header>

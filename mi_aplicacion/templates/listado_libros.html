@@ -3,7 +3,9 @@
 {% block content %}
     
 <div class="d-flex justify-content-center mb-2">
+    {% if user.is_staff %}
     <a href="/anadir_libro"><button class="btn btn-success">Nuevo</button></a>
+    {% endif %}
 </div>
     
 <table class="table">
@@ -12,7 +14,9 @@
         <th scope="col">Titulo</th>
         <th scope="col">Autor</th>
         <th scope="col">Portada</th>
+        {% if user.is_staff %}
         <th scope="col">Acción</th>
+        {% endif %}
     </tr>
     {% for libro in libros %}
     <tr>
@@ -24,6 +28,7 @@
         {% endfor %}
         </td>
         <td><img class="img_tabla" src="{{ libro.portada.url }}"></td>
+        {% if user.is_staff %}
         <td>
             <form action="/modificar_libro/{{libro.id}}" method="POST">
                 {% csrf_token %}
@@ -37,6 +42,7 @@
                 <button class="btn btn-danger btn-sm">Borrar</button>
             </form>
         </td>
+        {% endif %}
     </tr>
     {% endfor %}
 </table>
