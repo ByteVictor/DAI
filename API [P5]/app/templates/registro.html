@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+
+{% block variante %}
+<section class="bg-light p-2 border borfer-primary">
+  <form action="/register" method="POST">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Introduce el email">
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" class="form-control" name="password" placeholder="Introduce la contraseña" required>
+    </div>
+    {% if not validos %}
+      <div class="alert alert-danger" role="alert">
+        Los datos de registro introducidos no son válidos
+      </div>
+    {% endif %}
+    {% if not res %}
+      <div class="alert alert-danger" role="alert">
+        El usuario ya está registrado
+      </div>
+    {% endif %}
+    <button type="submit" class="btn btn-primary">Registrarse</button>
+  </form>
+
+</section>
+
+{% endblock %}

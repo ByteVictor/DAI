@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+
+{% block variante %}
+<section class="bg-light p-2 border borfer-primary">
+  <form action="/login" method="POST">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Introduce el email">
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" class="form-control" name="password" placeholder="Introduce la contraseña" required>
+    </div>
+    {% if intentado %}
+      <div class="alert alert-danger" role="alert">
+        Las credenciales no son válidas
+      </div>
+    {% endif %}
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+
+</section>
+
+{% endblock %}

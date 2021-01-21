@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+
+{% block variante %}
+<section class="bg-light p-2 border">
+  <h1>{{cuerpo['titulo']}}</h1>
+  
+  {% if not cuerpo['noformulario'] %}
+    <form class="form d-flex flex-column justify-content-center" method="POST">
+      <div class="form-group">
+        <label>{{cuerpo['resumen']|safe}}</label>
+        <input type="text" class="form-control" name="intento" placeholder="Introduce un valor">
+      </div>
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+    {% if enviado == 'error'%}
+      <div class="alert alert-danger" role="alert">
+        {{cuerpo['mensaje_error']}}
+      </div>
+    {% endif %}
+  {% endif %}
+</section>
+
+{% if enviado == 'correcto'%}
+  <section class="bg-light mt-2 p-2 border">
+    <div>{{salida|safe}}</div>
+  </section>
+{% endif %}
+
+{% endblock %}
