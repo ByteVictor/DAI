@@ -1,25 +1,5 @@
-/* *
- *
- *  (c) 2010-2021 Torstein Honsi
- *
- *  License: www.highcharts.com/license
- *
- *  Dark theme for Highcharts JS
- *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
- *
- * */
-'use strict';
-import H from '../../Core/Globals.js';
-import U from '../../Core/Utilities.js';
-var createElement = U.createElement, setOptions = U.setOptions;
-// Load the fonts
-createElement('link', {
-    href: 'https://fonts.googleapis.com/css?family=Unica+One',
-    rel: 'stylesheet',
-    type: 'text/css'
-}, null, document.getElementsByTagName('head')[0]);
-H.theme = {
+
+Highcharts.setOptions( {
     colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
         '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
     chart: {
@@ -211,6 +191,4 @@ H.theme = {
         trackBackgroundColor: '#404043',
         trackBorderColor: '#404043'
     }
-};
-// Apply the theme
-setOptions(H.theme);
+});
