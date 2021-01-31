@@ -4,3 +4,4 @@ Pillow
 django-crispy-forms
 django-bootstrap4
 django-allauth==0.43.0
+gunicorn
