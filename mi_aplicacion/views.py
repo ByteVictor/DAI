@@ -221,3 +221,6 @@ def modificar_prestamo(request, id_prestamo):
 
 def peliculas(request):
     return render(request, 'listado_pelis.html')
+
+def mapa(request):
+    return render(request, 'mapa.html')

@@ -19,4 +19,5 @@ urlpatterns = [
   path('borrar_prestamo', views.borrar_prestamo, name='borrar_prestamo'),
   path('modificar_prestamo/<int:id_prestamo>', views.modificar_prestamo, name='modificar_prestamo'),
   path('peliculas', views.peliculas, name='peliculas'),
+  path('mapa', views.mapa, name='mapa'),
 ]
