@@ -13,7 +13,7 @@ var data = [
     ['es-cu', 8],
     ['es-vi', 9],
     ['es-ss', 10],
-    ['es-gr', 80],
+    ['es-gr', 100],
     ['es-mu', 12],
     ['es-bu', 13],
     ['es-sa', 14],
